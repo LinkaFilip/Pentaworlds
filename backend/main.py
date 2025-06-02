@@ -10,6 +10,9 @@ models.Base.metadata.create_all(bind=engine)
 app = FastAPI()
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 
+@app.get("/")
+def read_root():
+    return {"Hello": "World"}
 def get_db():
     db = SessionLocal()
     try:
