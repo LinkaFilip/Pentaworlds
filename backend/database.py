@@ -1,10 +1,14 @@
+import os
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
+from dotenv import load_dotenv
 
-SQLALCHEMY_DATABASE_URL = "postgresql://penta_worlds_database_user:tlrQsqkboG4qHcixoBAIAOQlzYtLpMfx@dpg-d0v0gammcj7s73cqrnm0-a/penta_worlds_database"
+load_dotenv()  # načte proměnné z .env souboru
 
-engine = create_engine(SQLALCHEMY_DATABASE_URL)
+DATABASE_URL = os.getenv("DATABASE_URL")
+
+engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 Base = declarative_base()
