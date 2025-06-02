@@ -1,8 +1,10 @@
 from fastapi import FastAPI, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-from database import SessionLocal, engine
-import models, schemas, utils, auth
+
+# Správný import:
+from backend.database import SessionLocal, engine  
+import backend.models as models, backend.schemas as schemas, backend.utils as utils, backend.auth as auth
 
 models.Base.metadata.create_all(bind=engine)
 app = FastAPI()
