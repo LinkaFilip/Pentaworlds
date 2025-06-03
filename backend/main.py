@@ -16,8 +16,6 @@ from backend.schemas import Token
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/login")
-
 
 app.add_middleware(
     CORSMiddleware,
@@ -27,6 +25,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/login")
 @app.get("/")
 def read_root():
     return {"Hello": "World"}
