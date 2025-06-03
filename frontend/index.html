@@ -1,88 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Pentaworlds Login</title>
-  <style>
-    body { font-family: sans-serif; padding: 2em; background: #111; color: #eee; }
-    input, button { padding: 0.5em; margin: 0.5em 0; width: 100%; }
-    .container { max-width: 400px; margin: auto; }
-    .token-box { word-break: break-all; background: #222; padding: 1em; border-radius: 6px; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
 </head>
 <body>
-  <div class="container">
-    <h1>Pentaworlds Login</h1>
-
-    <h3>Sign Up</h3>
-    <input id="signup-username" placeholder="Username" />
-    <input id="signup-password" type="password" placeholder="Password" />
-    <button onclick="signup()">Create Account</button>
-
-    <h3>Log In</h3>
-    <input id="login-username" placeholder="Username" />
-    <input id="login-password" type="password" placeholder="Password" />
-    <button onclick="login()">Log In</button>
-
-    <h3>User Info</h3>
-    <button onclick="getMe()">Who Am I?</button>
-    <pre class="token-box" id="me-output">Not logged in yet.</pre>
-  </div>
-
-  <script>
-    const API_BASE = "https://your-fastapi-url.onrender.com"; // Replace with your actual API base
-
-    async function signup() {
-      const username = document.getElementById("signup-username").value;
-      const password = document.getElementById("signup-password").value;
-
-      const res = await fetch(`${API_BASE}/signup`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password })
-      });
-
-      const data = await res.json();
-      alert(res.ok ? "Signup successful!" : data.detail || "Signup failed.");
-    }
-
-    async function login() {
-      const username = document.getElementById("login-username").value;
-      const password = document.getElementById("login-password").value;
-
-      const form = new URLSearchParams();
-      form.append("username", username);
-      form.append("password", password);
-
-      const res = await fetch(`${API_BASE}/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: form
-      });
-
-      const data = await res.json();
-      if (res.ok) {
-        localStorage.setItem("token", data.access_token);
-        alert("Login successful!");
-      } else {
-        alert(data.detail || "Login failed.");
-      }
-    }
-
-    async function getMe() {
-      const token = localStorage.getItem("token");
-      if (!token) return alert("No token found. Please log in.");
-
-      const res = await fetch(`${API_BASE}/me`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-
-      const data = await res.json();
-      document.getElementById("me-output").textContent = res.ok
-        ? JSON.stringify(data, null, 2)
-        : data.detail || "Failed to fetch user.";
-    }
-  </script>
+    
 </body>
 </html>
