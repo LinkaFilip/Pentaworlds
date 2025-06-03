@@ -23,3 +23,4 @@ def create_access_token(data: dict):
 
 def decode_token(token: str):
     return jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+print("Everything is good from auth.py")

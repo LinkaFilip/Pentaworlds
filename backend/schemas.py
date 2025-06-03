@@ -14,3 +14,4 @@ class UserOut(BaseModel):
 class Token(BaseModel):
     access_token: str
     token_type: str
+print("Everything is good from schemas.py");
