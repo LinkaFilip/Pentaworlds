@@ -2,17 +2,20 @@ from fastapi import FastAPI, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 
-# Správný import:
-from backend.database import SessionLocal, engine  
-import backend.models as models, backend.schemas as schemas, backend.utils as utils, backend.auth as auth
+# Všechny importy jako moduly z backendu:
+from backend.database import SessionLocal, engine
+from backend import models, schemas, utils, auth
 
+# Vytvoření tabulek
 models.Base.metadata.create_all(bind=engine)
+
 app = FastAPI()
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 
 @app.get("/")
 def read_root():
     return {"Hello": "World"}
+
 def get_db():
     db = SessionLocal()
     try:
