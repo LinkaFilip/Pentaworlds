@@ -1,41 +1,43 @@
-import sys
-import os
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-
-from fastapi.middleware.cors import CORSMiddleware
-
 from fastapi import FastAPI, Depends, HTTPException, status
-from sqlalchemy.orm import Session
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-from backend.auth import authenticate_user, create_access_token
-# Všechny importy jako moduly z backendu:
+from sqlalchemy.orm import Session
+
 from backend.database import SessionLocal, engine
 from backend import models, schemas, utils, auth
-from backend.schemas import Token
-# Vytvoření tabulek
+from backend.auth import authenticate_user, create_access_token
+
+# ✅ Vytvoření DB tabulek
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
+# ✅ CORS – povolujeme přístup z pentaworlds.com
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://pentaworlds.com/login.html"],  # or ["*"] for dev
+    allow_origins=["https://pentaworlds.com"],  # ← frontend doména
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
+# OAuth2 token handler
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/login")
+
+
 @app.get("/")
 def read_root():
     return {"Hello": "World"}
 
+
+# Dependency – databázová session
 def get_db():
     db = SessionLocal()
     try:
         yield db
     finally:
         db.close()
+
 
 @app.post("/signup", response_model=schemas.UserOut)
 def signup(user: schemas.UserCreate, db: Session = Depends(get_db)):
@@ -49,16 +51,15 @@ def signup(user: schemas.UserCreate, db: Session = Depends(get_db)):
     db.refresh(new_user)
     return new_user
 
+
 @app.post("/login", response_model=schemas.Token)
-async def login(
-    form_data: OAuth2PasswordRequestForm = Depends(),
-    db: Session = Depends(get_db)  # <-- přidej toto
-):
-    user = authenticate_user(db, form_data.username, form_data.password)  # <-- a tady předej `db`
+def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+    user = authenticate_user(db, form_data.username, form_data.password)
     if not user:
         raise HTTPException(status_code=400, detail="Incorrect username or password")
     access_token = create_access_token(data={"sub": user.username})
     return {"access_token": access_token, "token_type": "bearer"}
+
 
 @app.get("/me", response_model=schemas.UserOut)
 def get_me(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
@@ -71,4 +72,3 @@ def get_me(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
     if user is None:
         raise HTTPException(status_code=404, detail="User not found")
     return user
-print("Everything is good from main.py")
