@@ -5,12 +5,12 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 # Všechny importy jako moduly z backendu:
 from backend.database import SessionLocal, engine
 from backend import models, schemas, utils, auth
-
+from .schemas import Token
 # Vytvoření tabulek
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/login")
 
 @app.get("/")
 def read_root():
@@ -35,13 +35,13 @@ def signup(user: schemas.UserCreate, db: Session = Depends(get_db)):
     db.refresh(new_user)
     return new_user
 
-@app.post("/login", response_model=schemas.Token)
-def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
-    user = db.query(models.User).filter(models.User.username == form_data.username).first()
-    if not user or not utils.verify_password(form_data.password, user.hashed_password):
+@app.post("/login", response_model=Token)
+async def login(form_data: OAuth2PasswordRequestForm = Depends()):
+    user = authenticate_user(form_data.username, form_data.password)
+    if not user:
         raise HTTPException(status_code=400, detail="Incorrect username or password")
-    token = auth.create_access_token({"sub": user.username})
-    return {"access_token": token, "token_type": "bearer"}
+    access_token = create_access_token(data={"sub": user.username})
+    return {"access_token": access_token, "token_type": "bearer"}
 
 @app.get("/me", response_model=schemas.UserOut)
 def get_me(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
