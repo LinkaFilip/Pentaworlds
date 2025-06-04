@@ -7,4 +7,5 @@ class User(Base):
     id = Column(Integer, primary_key=True, index=True)
     username = Column(String, unique=True, index=True)
     hashed_password = Column(String)
+    coins = Column(Integer, default=0) 
 print("Everything is good from models.py")
