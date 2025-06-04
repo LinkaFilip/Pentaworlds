@@ -8,4 +8,5 @@ class User(Base):
     username = Column(String, unique=True, index=True)
     hashed_password = Column(String)
     coins = Column(Integer, default=0) 
+    url_hash = Column(String, unique=True, index=True, default=lambda: secrets.token_hex(12))
 print("Everything is good from models.py")

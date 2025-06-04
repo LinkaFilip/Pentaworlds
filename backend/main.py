@@ -1,5 +1,6 @@
 import sys
 import os
+import uuid
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 from fastapi.middleware.cors import CORSMiddleware
@@ -42,8 +43,16 @@ def signup(user: schemas.UserCreate, db: Session = Depends(get_db)):
     db_user = db.query(models.User).filter(models.User.username == user.username).first()
     if db_user:
         raise HTTPException(status_code=400, detail="Username already registered")
+
     hashed_pw = utils.hash_password(user.password)
-    new_user = models.User(username=user.username, hashed_password=hashed_pw)
+    hash_url = secrets.token_hex(6)  # 12 znaků
+
+    new_user = models.User(
+        username=user.username,
+        hashed_password=hashed_pw,
+        coins=0,
+        hash_url=hash_url
+    )
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
