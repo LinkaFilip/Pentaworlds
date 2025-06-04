@@ -19,7 +19,7 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://pentaworlds.com"]
+    allow_origins=["https://pentaworlds.com"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
