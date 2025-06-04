@@ -19,7 +19,7 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://pentaworlds.com"],  # or ["*"] for dev
+    allow_origins=["https://pentaworlds.com"],  # ← bez /login.html!
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
