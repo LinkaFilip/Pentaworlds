@@ -8,7 +8,7 @@ class UserCreate(UserBase):
 
 class UserOut(UserBase):
     coins: int
-    hash_url: str
+    url_hash: str
 
     class Config:
         from_attributes = True
