@@ -5,10 +5,11 @@ import os
 import uuid
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
 
 from fastapi import FastAPI, Depends, HTTPException, status
+
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from auth import authenticate_user, create_access_token
