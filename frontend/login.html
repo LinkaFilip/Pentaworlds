@@ -37,7 +37,7 @@
       const username = document.getElementById("signup-username").value;
       const password = document.getElementById("signup-password").value;
 
-      const res = await fetch(`${API_BASE}/signup`, {
+      const res = await fetch(`https://pentaworlds.onrender.com/signup`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password })
@@ -60,7 +60,7 @@
       form.append("username", username);
       form.append("password", password);
 
-      const res = await fetch(`${API_BASE}/login`, {
+      const res = await fetch(`https://pentaworlds.onrender.com/login`, {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: form
