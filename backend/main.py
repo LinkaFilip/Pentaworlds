@@ -129,8 +129,14 @@ def user_world(url_hash: str, db: Session = Depends(get_db)):
     class CoinsData(BaseModel):
         coins: int
 
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/login")
+
+class CoinsData(BaseModel):
+    coins: int
+
 @app.post("/update_coins")
-def update_coins(data: CoinsData, token: str = Depends(auth.oauth2_scheme), db: Session = Depends(get_db)):
+def update_coins(data: CoinsData, token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
     payload = auth.decode_token(token)
     username = payload.get("sub")
     if not username:
