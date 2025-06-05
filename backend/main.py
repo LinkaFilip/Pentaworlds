@@ -9,11 +9,15 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-from backend.auth import authenticate_user, create_access_token
+from auth import authenticate_user, create_access_token
 # Všechny importy jako moduly z backendu:
-from backend.database import SessionLocal, engine
-from backend import models, schemas, utils, auth
-from backend.schemas import Token
+from database import SessionLocal, engine
+import models
+import schemas
+import utils
+import schemas
+import auth
+from schemas import Token
 # Vytvoření tabulek
 models.Base.metadata.create_all(bind=engine)
 

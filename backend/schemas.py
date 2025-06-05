@@ -10,8 +10,9 @@ class UserOut(BaseModel):
     coins: int
     hash_url: str
 
-    class Config:
-        orm_mode = True
+    model_config = {
+        "from_attributes": True  # Pro Pydantic v2 (dříve orm_mode=True)
+    }
 class Token(BaseModel):
     access_token: str
     token_type: str

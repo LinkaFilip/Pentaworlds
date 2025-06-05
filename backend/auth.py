@@ -5,7 +5,8 @@ SECRET_KEY = "your-secret-key"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
-from backend import models, utils
+import models
+import utils
 from sqlalchemy.orm import Session
 
 def authenticate_user(db: Session, username: str, password: str):
