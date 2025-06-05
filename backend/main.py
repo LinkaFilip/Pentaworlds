@@ -97,7 +97,7 @@ async def global_exception_handler(request, exc):
         content={"detail": "Internal server error"}
     )
 @app.get("/{url_hash}", response_class=HTMLResponse)
-def user_world(url_hash: str, db: Session = Depends(SessionLocal)):
+def user_world(url_hash: str, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.url_hash == url_hash).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
