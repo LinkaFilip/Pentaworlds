@@ -43,7 +43,12 @@
         body: JSON.stringify({ username, password })
       });
 
-      const data = await res.json();
+      let data;
+        try {
+          data = await res.json();
+        } catch (e) {
+          data = { detail: "Invalid JSON response" };
+        }
       alert(res.ok ? "Signup successful!" : data.detail || "Signup failed.");
     }
 
