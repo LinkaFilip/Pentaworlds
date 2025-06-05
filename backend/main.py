@@ -7,7 +7,7 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 
 from fastapi import FastAPI, Depends, HTTPException, status
-
+from models import User
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, HTMLResponse
 from sqlalchemy.orm import Session
@@ -101,7 +101,7 @@ async def global_exception_handler(request, exc):
     )
 @app.get("/{url_hash}", response_class=HTMLResponse)
 def user_world(url_hash: str, db: Session = Depends(get_db)):
-    user = db.query(User).filter(User.url_hash == url_hash).first()
+    user = db.query(models.User).filter(models.User.url_hash == url_hash).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
 
