@@ -102,6 +102,25 @@ def user_world(url_hash: str, db: Session = Depends(SessionLocal)):
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
 
-    # Vrátíš HTML (třeba šablonu, nebo ručně napsaný HTML string)
-    return f"<h1>Welcome to {user.username}'s world!</h1><p>Coins: {user.coins}</p>"
+    return HTMLResponse(f"""
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>{user.username}'s World</title>
+        <style>
+            body {{
+                background-color: #111;
+                color: #eee;
+                font-family: sans-serif;
+                padding: 2em;
+            }}
+        </style>
+    </head>
+    <body>
+        <h1>Welcome to {user.username}'s world!</h1>
+        <p>Coins: {user.coins}</p>
+    </body>
+    </html>
+    """)
 print("Everything is good from main.py")
