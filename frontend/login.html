@@ -73,6 +73,18 @@
       } else {
         alert(data.detail || "Login failed.");
       }
+          if (res.ok) {
+        const meRes = await fetch("https://pentaworlds.onrender.com/me", {
+            credentials: "include"
+        });
+        const user = await meRes.json();
+        const hash = user.url_hash;
+
+        // Přesměrování
+        window.location.href = `https://pentaworlds.com/${hash}`;
+    } else {
+        alert("Login failed");
+    }
     }
 
     async function getMe() {

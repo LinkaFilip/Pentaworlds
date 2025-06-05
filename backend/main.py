@@ -96,4 +96,12 @@ async def global_exception_handler(request, exc):
         status_code=500,
         content={"detail": "Internal server error"}
     )
+@app.get("/{url_hash}", response_class=HTMLResponse)
+def user_world(url_hash: str, db: Session = Depends(SessionLocal)):
+    user = db.query(User).filter(User.url_hash == url_hash).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    # Vrátíš HTML (třeba šablonu, nebo ručně napsaný HTML string)
+    return f"<h1>Welcome to {user.username}'s world!</h1><p>Coins: {user.coins}</p>"
 print("Everything is good from main.py")
