@@ -94,7 +94,10 @@ async def global_exception_handler(request, exc):
     logging.exception("Unhandled error occurred")
     return JSONResponse(
         status_code=500,
-        content={"detail": "Internal server error"}
+        content={
+            "detail": "Internal server error",
+            "error": str(exc)  # <-- přidej přesný text chyby
+        }
     )
 @app.get("/{url_hash}", response_class=HTMLResponse)
 def user_world(url_hash: str, db: Session = Depends(get_db)):
