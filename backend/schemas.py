@@ -11,7 +11,7 @@ class UserOut(UserBase):
     hash_url: str
 
     class Config:
-        from_attributes = True  # nebo orm_mode = True pokud používáš Pydantic v1
+        from_attributes = True
 
 class Token(BaseModel):
     access_token: str

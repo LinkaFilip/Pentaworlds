@@ -6,6 +6,7 @@ import uuid
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 
 from fastapi import FastAPI, Depends, HTTPException, status
 from sqlalchemy.orm import Session
