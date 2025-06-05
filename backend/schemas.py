@@ -1,19 +1,20 @@
 from pydantic import BaseModel
 
-class UserCreate(BaseModel):
+class UserBase(BaseModel):
     username: str
+
+class UserCreate(UserBase):
     password: str
 
-class UserOut(BaseModel):
-    id: int
-    username: str
+class UserOut(UserBase):
     coins: int
     hash_url: str
 
-    model_config = {
-        "from_attributes": True  # Pro Pydantic v2 (dříve orm_mode=True)
-    }
+    class Config:
+        from_attributes = True  # nebo orm_mode = True pokud používáš Pydantic v1
+
 class Token(BaseModel):
     access_token: str
     token_type: str
+
 print("Everything is good from schemas.py");

@@ -1,4 +1,5 @@
 import secrets
+import logging
 import sys
 import os
 import uuid
@@ -86,4 +87,11 @@ def get_me(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
     if user is None:
         raise HTTPException(status_code=404, detail="User not found")
     return user
+@app.exception_handler(Exception)
+async def global_exception_handler(request, exc):
+    logging.exception("Unhandled error occurred")
+    return JSONResponse(
+        status_code=500,
+        content={"detail": "Internal server error"}
+    )
 print("Everything is good from main.py")
