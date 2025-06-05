@@ -13,7 +13,8 @@ from fastapi.responses import JSONResponse, HTMLResponse
 from sqlalchemy.orm import Session
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from auth import authenticate_user, create_access_token
-# Všechny importy jako moduly z backendu:
+from pydantic import BaseModel
+
 from database import SessionLocal, engine
 import models
 import schemas
