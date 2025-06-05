@@ -54,13 +54,13 @@ def signup(user: schemas.UserCreate, db: Session = Depends(get_db)):
         raise HTTPException(status_code=400, detail="Username already registered")
 
     hashed_pw = utils.hash_password(user.password)
-    hash_url = secrets.token_hex(6)  # 12 znaků
+    url_hash = secrets.token_hex(6)  # 12 znaků
 
     new_user = models.User(
         username=user.username,
         hashed_password=hashed_pw,
         coins=0,
-        hash_url=hash_url
+        url_hash=url_hash
     )
     db.add(new_user)
     db.commit()
