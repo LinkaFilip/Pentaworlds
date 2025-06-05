@@ -127,7 +127,7 @@ def user_world(url_hash: str, db: Session = Depends(get_db)):
     </html>
     """)
     class CoinsData(BaseModel):
-    coins: int
+        coins: int
 
 @app.post("/update_coins")
 def update_coins(data: CoinsData, token: str = Depends(auth.oauth2_scheme), db: Session = Depends(get_db)):
