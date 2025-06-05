@@ -7,10 +7,11 @@ class UserCreate(BaseModel):
 class UserOut(BaseModel):
     id: int
     username: str
+    coins: int
+    hash_url: str
 
-    model_config = {
-        "from_attributes": True
-    }
+    class Config:
+        orm_mode = True
 class Token(BaseModel):
     access_token: str
     token_type: str
