@@ -60,31 +60,38 @@
       form.append("username", username);
       form.append("password", password);
 
-      const res = await fetch(`https://pentaworlds.onrender.com/login`, {
+      const res = await fetch(`${API_BASE}/login`, {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: form
       });
 
       const data = await res.json();
-      if (res.ok) {
-        localStorage.setItem("token", data.access_token);
-        alert("Login successful!");
-      } else {
-        alert(data.detail || "Login failed.");
-      }
-          if (res.ok) {
-        const meRes = await fetch("https://pentaworlds.onrender.com/me", {
-            credentials: "include"
-        });
-        const user = await meRes.json();
-        const hash = user.url_hash;
 
-        // Přesměrování
-        window.location.href = `https://pentaworlds.com/${hash}`;
-    } else {
-        alert("Login failed");
-    }
+      if (!res.ok) {
+        alert(data.detail || "Login failed.");
+        return;
+      }
+
+      localStorage.setItem("token", data.access_token);
+      alert("Login successful!");
+
+      // Teď správně dotaz na /me s tokenem
+      const meRes = await fetch(`${API_BASE}/me`, {
+        headers: { Authorization: `Bearer ${data.access_token}` }
+      });
+
+      if (!meRes.ok) {
+        alert("Failed to load user info after login.");
+        return;
+      }
+
+      const user = await meRes.json();
+      if (user.url_hash) {
+        window.location.href = `https://pentaworlds.com/${user.url_hash}`;
+      } else {
+        alert("Missing URL hash in user data.");
+      }
     }
 
     async function getMe() {
