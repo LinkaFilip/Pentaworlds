@@ -7,13 +7,29 @@
   <title>Pentaworlds Login</title>
 </head>
 <body>
-  <div class="container">
-    <h1>Pentaworlds Login</h1>
-    <h3>Log In</h3>
-    <input id="login-username" placeholder="Username" />
-    <input id="login-password" type="password" placeholder="Password" />
-    <button onclick="login()">Log In</button>
-  </div>
+  	<div class="img"></div>
+	<div class="content">
+		<h1>Create new Account</h1>
+		<div class="form">
+			<form action="">
+				<div class="container">
+					<h5>Email</h5>
+					<input type="text" id="login-username" placeholder="Enter your username">
+					<h5>Password</h5>
+					<div class="password">
+						<input type="password" id="login-password" placeholder="Enter your password">
+						<ion-icon class="eye" id="eyeon" name="eye-outline"></ion-icon>
+						<ion-icon class="eye" id="eyeoff" name="eye-off-outline"></ion-icon>
+					</div>
+					<input type="submit" href="index.html" value="Create new account" onclick="login()">
+					<div class="checkbox">
+						<input type="checkbox">
+						<h5 class="rembember-me">Remember me for 30 days</h5>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
 
   <script>
     const API_BASE = "https://pentaworlds.onrender.com";

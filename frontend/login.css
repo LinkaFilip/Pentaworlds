@@ -98,7 +98,7 @@ input[type="checkbox"]:focus {
 	align-items: center;
 }
 
-.password {
+.login-password {
 	position: relative;
 	height: 40px;
 	border-bottom: 10px;
