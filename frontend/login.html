@@ -28,8 +28,9 @@
   <script>
     const API_BASE = "https://pentaworlds.onrender.com";
 
+    async function login(event) {
+      event.preventDefault(); // zamezí reloadu
 
-    async function login() {
       const username = document.getElementById("login-username").value;
       const password = document.getElementById("login-password").value;
 
@@ -45,23 +46,34 @@
 
       const data = await res.json();
 
+      if (!res.ok) {
+        alert(data.detail || "Login failed.");
+        return;
+      }
+
       localStorage.setItem("token", data.access_token);
 
-      // Teď správně dotaz na /me s tokenem
+      // Dotaz na /me
       const meRes = await fetch(`${API_BASE}/me`, {
         headers: { Authorization: `Bearer ${data.access_token}` }
       });
-    }
 
+      if (!meRes.ok) {
+        alert("Failed to load user info.");
+        return;
+      }
 
       const user = await meRes.json();
       if (user.url_hash) {
         window.location.href = `https://pentaworlds.com/${user.url_hash}`;
- 
+      } else {
+        alert("Missing URL hash.");
+      }
     }
 
     async function getMe() {
       const token = localStorage.getItem("token");
+      if (!token) return alert("No token found.");
 
       const res = await fetch(`${API_BASE}/me`, {
         headers: { Authorization: `Bearer ${token}` }

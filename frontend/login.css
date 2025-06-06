@@ -24,7 +24,7 @@ body {
 .content {
 	position: absolute;
 	width: 500px;
-	height: 310px;
+	height: auto;
 	top: 50%;
 	left: 25%;
 	transform: translate(-50%, -50%);
