@@ -1,0 +1,105 @@
+* {
+	padding: 0;
+	margin: 0;
+	font-family: 'Poppins', sans-serif;
+	user-select: none;
+	box-sizing: border-box;
+}
+
+body {
+	background: #FFFFFF;
+	width: 100vw;
+	height: 100vh;
+}
+
+.img {
+	position: absolute;
+	left: 50%;
+	width: 50%;
+	height: 100%;
+	background-image: url("https://images.unsplash.com/photo-1621342261924-3e2f6c9603f5?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Nnx8c3F1YXJlJTIwaW1hZ2V8ZW58MHx8MHx8&auto=format&fit=crop&w=1000&q=60");
+	filter: blur(0px);
+}
+
+.content {
+	position: absolute;
+	width: 500px;
+	height: 310px;
+	top: 50%;
+	left: 25%;
+	transform: translate(-50%, -50%);
+	border: 1px solid grey;
+	box-sizing: unset;
+	padding: 30px;
+	border-radius: 7px;
+}
+
+input {
+	padding: 8px 12px;
+	width: 500px;
+	height: 40px;
+	margin-bottom: 20px;
+	outline: none;
+	border-radius: 7px;
+	border: 0;
+	text-indent: 15px;
+	box-shadow: 0 0 0 1px #e0e0e0, 0 2px 4px 0 rgb(0 0 0 / 7%), 0 1px 1.5px 0 rgb(0 0 0 / 5%);
+	overflow: visible;
+}
+
+input:focus {
+	box-shadow: 0 0 6px #75b3d7, 0 2px 4px 0 rgb(255 255 255 / 7%), 0 0px 1.5px 0 rgb(255 255 255 / 5%);
+}
+
+input[type="submit"] {
+	background-color: rgb(0, 116, 212);
+	color: rgb(255, 255, 255);
+	margin: 20px;
+	position: relative;
+	left: -20px;
+}
+
+form {
+	display: flex;
+	flex-direction: column;
+}
+
+h1,
+h5 {
+	color: black;
+	left: 0;
+	margin-bottom: 10px;
+}
+
+input[type="checkbox"] {
+	width: 15px;
+	accent-color: rgb(0, 116, 212);
+	height: 15px;
+}
+
+input[type="checkbox"]:focus {
+	box-shadow: 0 0 6px #75b3d7, 0 2px 4px 0 rgb(255 255 255 / 7%), 0 0px 1.5px 0 rgb(255 255 255 / 5%);
+}
+
+.checkbox {
+	display: flex;
+}
+
+.rembember-me {
+	position: relative;
+	top: 20%;
+	left: 5%;
+	transform: translateY(5%);
+	font-style: normal;
+}
+
+.checkbox-text {
+	justify-content: center;
+	align-items: center;
+}
+
+.password {
+	position: relative;
+	height: 40px;
+	border-bottom: 10px;
+}
