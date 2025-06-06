@@ -125,7 +125,7 @@ def user_world(url_hash: str, db: Session = Depends(get_db)):
     <body>
         <h1>Welcome to {user.username}'s world!</h1>
         <p>Coins: {user.coins}</p>
-        <p>Coins: {user.rocks}</p>
+        <p>Rocks: {user.rocks}</p>
     </body>
     </html>
     """)
