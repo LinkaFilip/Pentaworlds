@@ -71,20 +71,6 @@ h5 {
 	margin-bottom: 10px;
 }
 
-input[type="checkbox"] {
-	width: 15px;
-	accent-color: rgb(0, 116, 212);
-	height: 15px;
-}
-
-input[type="checkbox"]:focus {
-	box-shadow: 0 0 6px #75b3d7, 0 2px 4px 0 rgb(255 255 255 / 7%), 0 0px 1.5px 0 rgb(255 255 255 / 5%);
-}
-
-.checkbox {
-	display: flex;
-}
-
 .rembember-me {
 	position: relative;
 	top: 20%;
