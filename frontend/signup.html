@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pentaworlds Login</title>
+  <style>
+    body { font-family: sans-serif; padding: 2em; background: #111; color: #eee; }
+    input, button { padding: 0.5em; margin: 0.5em 0; width: 100%; }
+    .container { max-width: 400px; margin: auto; }
+    .token-box { word-break: break-all; background: #222; padding: 1em; border-radius: 6px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Pentaworlds Login</h1>
+
+    <h3>Sign Up</h3>
+    <input id="signup-username" placeholder="Username" />
+    <input id="signup-password" type="password" placeholder="Password" />
+    <button onclick="signup()">Create Account</button>
+  </div>
+
+  <script>
+    const API_BASE = "https://pentaworlds.onrender.com";
+
+    async function signup() {
+      const username = document.getElementById("signup-username").value;
+      const password = document.getElementById("signup-password").value;
+
+      const res = await fetch(`https://pentaworlds.onrender.com/signup`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password })
+      });
+
+      let data;
+        try {
+          data = await res.json();
+        } catch (e) {
+          data = { detail: "Invalid JSON response" };
+        }
+      alert(res.ok ? "Signup successful!" : data.detail || "Signup failed.");
+    }
+
+    async function getMe() {
+      const token = localStorage.getItem("token");
+      if (!token) return alert("No token found. Please log in.");
+
+      const res = await fetch(`${API_BASE}/me`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+      const data = await res.json();
+      document.getElementById("me-output").textContent = res.ok
+        ? JSON.stringify(data, null, 2)
+        : data.detail || "Failed to fetch user.";
+    }
+  </script>
+</body>
+</html>

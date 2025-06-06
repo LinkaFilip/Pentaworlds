@@ -14,43 +14,15 @@
 <body>
   <div class="container">
     <h1>Pentaworlds Login</h1>
-
-    <h3>Sign Up</h3>
-    <input id="signup-username" placeholder="Username" />
-    <input id="signup-password" type="password" placeholder="Password" />
-    <button onclick="signup()">Create Account</button>
-
     <h3>Log In</h3>
     <input id="login-username" placeholder="Username" />
     <input id="login-password" type="password" placeholder="Password" />
     <button onclick="login()">Log In</button>
-
-    <h3>User Info</h3>
-    <button onclick="getMe()">Who Am I?</button>
-    <pre class="token-box" id="me-output">Not logged in yet.</pre>
   </div>
 
   <script>
     const API_BASE = "https://pentaworlds.onrender.com";
 
-    async function signup() {
-      const username = document.getElementById("signup-username").value;
-      const password = document.getElementById("signup-password").value;
-
-      const res = await fetch(`https://pentaworlds.onrender.com/signup`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password })
-      });
-
-      let data;
-        try {
-          data = await res.json();
-        } catch (e) {
-          data = { detail: "Invalid JSON response" };
-        }
-      alert(res.ok ? "Signup successful!" : data.detail || "Signup failed.");
-    }
 
     async function login() {
       const username = document.getElementById("login-username").value;
