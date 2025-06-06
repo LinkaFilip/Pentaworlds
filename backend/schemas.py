@@ -8,6 +8,7 @@ class UserCreate(UserBase):
 
 class UserOut(UserBase):
     coins: int
+    rocks: int
     url_hash: str
 
     class Config:

@@ -61,6 +61,7 @@ def signup(user: schemas.UserCreate, db: Session = Depends(get_db)):
         username=user.username,
         hashed_password=hashed_pw,
         coins=0,
+        rocks=0,
         url_hash=url_hash
     )
     db.add(new_user)
@@ -129,12 +130,14 @@ def user_world(url_hash: str, db: Session = Depends(get_db)):
     """)
     class CoinsData(BaseModel):
         coins: int
+        rocks: int
 
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/login")
 
 class CoinsData(BaseModel):
     coins: int
+    rocks: int
 
 @app.post("/update_coins")
 def update_coins(data: CoinsData, token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
@@ -148,4 +151,16 @@ def update_coins(data: CoinsData, token: str = Depends(oauth2_scheme), db: Sessi
     user.coins = data.coins
     db.commit()
     return {"message": "Coins updated", "coins": user.coins}
+@app.post("/update_rocks")
+def rocks(data: CoinsData, token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
+    payload = auth.decode_token(token)
+    username = payload.get("sub")
+    if not username:
+        raise HTTPException(status_code=401, detail="Invalid token")
+    user = db.query(models.User).filter(models.User.username == username).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    user.coins = data.coins
+    db.commit()
+    return {"message": "Rocks updated", "rocks": user.rocks}
 print("Everything is good from main.py")

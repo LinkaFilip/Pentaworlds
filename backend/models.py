@@ -12,6 +12,7 @@ class User(Base):
     username = Column(String, unique=True, index=True)
     hashed_password = Column(String)
     coins = Column(Integer, default=0)
+    rocks = Column(Integer, default=0)
     url_hash = Column(String, unique=True, index=True, default=generate_url_hash)
 
 print("Everything is good from models.py")
