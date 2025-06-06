@@ -19,6 +19,7 @@
 						<input type="password" id="login-password" name="password" placeholder="Enter your password">
 					</div>
 					<input type="submit" href="index.html" value="Log in" onclick="login()">
+          <a href="signup.html">Don't have an account? <span style="color:rgb(0, 116, 212)">Sign up</span></a>
 					</div>
 				</div>
 		</div>
@@ -50,7 +51,7 @@
       const meRes = await fetch(`${API_BASE}/me`, {
         headers: { Authorization: `Bearer ${data.access_token}` }
       });
-
+    }
 
 
       const user = await meRes.json();
