@@ -1,33 +1,32 @@
+print("main.py načten")
 import secrets
 import logging
 import sys
 import os
 import uuid
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-
 
 from fastapi import FastAPI, Depends, HTTPException, status
-from models import User
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, HTMLResponse
-from sqlalchemy.orm import Session
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-from auth import authenticate_user, create_access_token
 from pydantic import BaseModel
+from sqlalchemy.orm import Session
+
+
+from backend import schemas, utils, auth, models
+from backend.database import SessionLocal, engine, get_db
+from backend.routers import user
+
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 from database import SessionLocal, engine, get_db
-import models
-import schemas
-import utils
-import schemas
-import auth
+
 from schemas import Token
 # Vytvoření tabulek
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
-from .routers import user
 app.include_router(user.router)
 
 app.add_middleware(
