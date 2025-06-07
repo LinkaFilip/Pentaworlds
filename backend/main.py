@@ -186,4 +186,7 @@ def rocks(data: CoinsData, token: str = Depends(oauth2_scheme), db: Session = De
 def test_auth(token: str = Depends(oauth2_scheme)):
     print("Token received in /test-auth:", token)
     return {"token": token}
+    print("DB session:", db)
+    user = db.query(User).filter(User.username == username).first()
+    print("Queried user:", user)
 print("Everything is good from main.py")
