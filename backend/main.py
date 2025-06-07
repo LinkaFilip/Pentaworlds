@@ -115,8 +115,8 @@ def user_world(url_hash: str, db: Session = Depends(get_db)):
         <title>{user.username}'s World</title>
         <style>
             body {{
-                background-color: #111;
-                color: #eee;
+                background-color: #ffffff;
+                color: black;
                 font-family: sans-serif;
                 padding: 2em;
             }}
