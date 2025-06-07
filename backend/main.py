@@ -21,7 +21,7 @@ from backend.auth import authenticate_user, create_access_token
 app = FastAPI()
 
 app.include_router(user.router)
-
+models.Base.metadata.create_all(bind=engine)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["https://pentaworlds.com"],
