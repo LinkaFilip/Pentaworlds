@@ -12,6 +12,7 @@ from fastapi.responses import JSONResponse, HTMLResponse
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
+from .auth import decode_token
 
 from backend import schemas, utils, auth, models
 from backend.database import SessionLocal, engine, get_db
