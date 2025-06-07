@@ -182,4 +182,8 @@ def rocks(data: CoinsData, token: str = Depends(oauth2_scheme), db: Session = De
     user.coins = data.coins
     db.commit()
     return {"message": "Rocks updated", "rocks": user.rocks}
+@app.get("/test-auth")
+def test_auth(token: str = Depends(oauth2_scheme)):
+    print("Token received in /test-auth:", token)
+    return {"token": token}
 print("Everything is good from main.py")
