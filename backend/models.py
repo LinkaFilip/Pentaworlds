@@ -1,6 +1,6 @@
 import secrets
 from sqlalchemy import Column, Integer, String
-from database import Base
+from backend.database import Base
 
 def generate_url_hash():
     return secrets.token_hex(12)

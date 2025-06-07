@@ -1,21 +1,26 @@
 from datetime import datetime, timedelta
 from jose import JWTError, jwt
+from fastapi import Depends, HTTPException, status
+from fastapi.security import OAuth2PasswordBearer
+from sqlalchemy.orm import Session
+from backend.database import get_db
+from backend.models import User
+from backend import utils
 
 SECRET_KEY = "your-secret-key"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
-import models
-import utils
-from sqlalchemy.orm import Session
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/login")
 
 def authenticate_user(db: Session, username: str, password: str):
-    user = db.query(models.User).filter(models.User.username == username).first()
+    user = db.query(User).filter(User.username == username).first()
     if not user:
         return None
     if not utils.verify_password(password, user.hashed_password):
         return None
     return user
+
 def create_access_token(data: dict):
     to_encode = data.copy()
     expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
@@ -23,5 +28,21 @@ def create_access_token(data: dict):
     return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
 
 def decode_token(token: str):
-    return jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        return payload
+    except JWTError:
+        raise HTTPException(status_code=401, detail="Invalid token")
+
+def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
+    payload = decode_token(token)
+    username = payload.get("sub")
+    if username is None:
+        raise HTTPException(status_code=401, detail="Invalid authentication credentials")
+
+    user = db.query(User).filter(User.username == username).first()
+    if user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    return user
+
 print("Everything is good from auth.py")
