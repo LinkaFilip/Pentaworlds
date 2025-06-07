@@ -6,7 +6,7 @@ import os
 load_dotenv()  # musí být dřív než os.getenv
 
 DATABASE_URL = os.getenv("DATABASE_URL")
-
+print(f"DATABASE_URL = '{DATABASE_URL}'")
 if DATABASE_URL is None:
     raise ValueError("DATABASE_URL not set in environment variables")
 
