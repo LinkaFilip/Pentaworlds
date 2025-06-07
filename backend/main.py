@@ -4,8 +4,6 @@ import sys
 import os
 import uuid
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-from .routers import user
-app.include_router(user.router)
 
 
 from fastapi import FastAPI, Depends, HTTPException, status
@@ -28,6 +26,9 @@ from schemas import Token
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
+
+from .routers import user
+app.include_router(user.router)
 
 app.add_middleware(
     CORSMiddleware,
@@ -100,14 +101,27 @@ async def global_exception_handler(request, exc):
         status_code=500,
         content={
             "detail": "Internal server error",
-            "error": str(exc)  # <-- přidej přesný text chyby
+            "error": str(exc)
         }
     )
 @app.get("/{url_hash}", response_class=HTMLResponse)
-def user_world(url_hash: str, db: Session = Depends(get_db)):
+def user_world(
+    url_hash: str,
+    db: Session = Depends(get_db),
+    token: str = Depends(oauth2_scheme)
+):
+    try:
+        payload = auth.decode_token(token)
+        username = payload.get("sub")
+    except:
+        raise HTTPException(status_code=401, detail="Invalid token")
+
     user = db.query(models.User).filter(models.User.url_hash == url_hash).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
+
+    if user.username != username:
+        raise HTTPException(status_code=403, detail="Access denied")
 
     return HTMLResponse(f"""
     <!DOCTYPE html>
@@ -129,26 +143,6 @@ def user_world(url_hash: str, db: Session = Depends(get_db)):
         <p>Coins: {user.coins}</p>
         <p>Rocks: {user.rocks}</p>
     </body>
-    <script>
-        const token = localStorage.getItem("token");
-
-        fetch(`https://pentaworlds.onrender.com/user/${window.location.pathname.slice(1)}`, {
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
-        })
-        .then(res => {
-        if (!res.ok) throw new Error("Unauthorized or not your page");
-        return res.json();
-        })
-        .then(data => {
-        console.log("Welcome", data.username);
-        })
-        .catch(err => {
-        alert("Access denied");
-        window.location.href = "/login.html";
-        });
-    </script>
     </html>
     """)
     class CoinsData(BaseModel):
