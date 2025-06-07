@@ -15,7 +15,7 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from auth import authenticate_user, create_access_token
 from pydantic import BaseModel
 
-from database import SessionLocal, engine
+from database import SessionLocal, engine, get_db
 import models
 import schemas
 import utils
@@ -43,12 +43,7 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/login")
 def read_root():
     return {"Hello": "World"}
 
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
+
 
 @app.post("/signup", response_model=schemas.UserOut)
 def signup(user: schemas.UserCreate, db: Session = Depends(get_db)):
