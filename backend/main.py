@@ -16,6 +16,7 @@ from sqlalchemy.orm import Session
 from backend import schemas, utils, auth, models
 from backend.database import SessionLocal, engine, get_db
 from backend.routers import user
+from backend.auth import authenticate_user, create_access_token
 
 app = FastAPI()
 
@@ -33,7 +34,7 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/login")
 @app.get("/")
 def read_root():
     return {"Hello": "World"}
-    
+
 def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
     from .auth import decode_token  # pokud decode_token není přímo v auth.py, importuj správně
     try:
