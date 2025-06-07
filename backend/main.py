@@ -4,6 +4,8 @@ import sys
 import os
 import uuid
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+from .routers import user
+app.include_router(user.router)
 
 
 from fastapi import FastAPI, Depends, HTTPException, status
@@ -72,9 +74,9 @@ def signup(user: schemas.UserCreate, db: Session = Depends(get_db)):
 @app.post("/login", response_model=schemas.Token)
 def login(
     form_data: OAuth2PasswordRequestForm = Depends(),
-    db: Session = Depends(get_db)  # <-- přidej toto
+    db: Session = Depends(get_db)
 ):
-    user = authenticate_user(db, form_data.username, form_data.password)  # <-- a tady předej `db`
+    user = authenticate_user(db, form_data.username, form_data.password)
     if not user:
         raise HTTPException(status_code=400, detail="Incorrect username or password")
     access_token = create_access_token(data={"sub": user.username})
@@ -127,6 +129,26 @@ def user_world(url_hash: str, db: Session = Depends(get_db)):
         <p>Coins: {user.coins}</p>
         <p>Rocks: {user.rocks}</p>
     </body>
+    <script>
+        const token = localStorage.getItem("token");
+
+        fetch(`https://pentaworlds.onrender.com/user/${window.location.pathname.slice(1)}`, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+        })
+        .then(res => {
+        if (!res.ok) throw new Error("Unauthorized or not your page");
+        return res.json();
+        })
+        .then(data => {
+        console.log("Welcome", data.username);
+        })
+        .catch(err => {
+        alert("Access denied");
+        window.location.href = "/login.html";
+        });
+    </script>
     </html>
     """)
     class CoinsData(BaseModel):
