@@ -8,7 +8,9 @@ from backend.database import get_db
 from backend.models import User
 from backend import utils
 from dotenv import load_dotenv
+
 load_dotenv()
+
 SECRET_KEY = os.getenv("SECRET_KEY")
 if not SECRET_KEY:
     raise RuntimeError("SECRET_KEY not set in .env")
@@ -29,7 +31,9 @@ def create_access_token(data: dict):
     to_encode = data.copy()
     expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     to_encode.update({"exp": expire})
-    return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    print("Generated token:", encoded_jwt)  # debug
+    return encoded_jwt
 
 def decode_token(token: str):
     try:
@@ -41,12 +45,18 @@ def decode_token(token: str):
 def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
     payload = decode_token(token)
     username = payload.get("sub")
+    print("TOKEN:", token)
     if username is None:
         raise HTTPException(status_code=401, detail="Invalid authentication credentials")
+    
 
     user = db.query(User).filter(User.username == username).first()
     if user is None:
         raise HTTPException(status_code=404, detail="User not found")
     return user
-
+    
+@app.get("/test-auth")
+def test_auth(token: str = Depends(oauth2_scheme)):
+    print("Token received in /test-auth:", token)
+    return {"token": token}
 print("Everything is good from auth.py")
