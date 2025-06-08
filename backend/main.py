@@ -113,9 +113,9 @@ def user_world(url_hash: str):
     <html lang="en">
     <head>
       <meta charset="UTF-8" />
-      <title>User World</title>
+      <title>User</title>
     </head>
-    <body>
+    <body style="font-family: 'Helvetica', sans-serif;">
       <h1 id="title">Loading...</h1>
       <p id="coins"></p>
       <p id="rocks"></p>
@@ -132,7 +132,7 @@ def user_world(url_hash: str):
           }})
           .then(res => res.json())
           .then(data => {{
-            document.getElementById("title").textContent = `Welcome to ${{data.username}}'s world!`;
+            document.getElementById("title").textContent = `Welcome ${{data.username}}!`;
             document.getElementById("coins").textContent = `Coins: ${{data.coins}}`;
             document.getElementById("rocks").textContent = `Rocks: ${{data.rocks}}`;
           }})
