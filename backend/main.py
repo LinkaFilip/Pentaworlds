@@ -107,43 +107,40 @@ async def global_exception_handler(request, exc):
         }
     )
 @app.get("/{url_hash}", response_class=HTMLResponse)
-def user_world(
-    url_hash: str,
-    db: Session = Depends(get_db),
-    token: str = Depends(oauth2_scheme)
-):
-    try:
-        payload = auth.decode_token(token)
-        username = payload.get("sub")
-    except:
-        raise HTTPException(status_code=401, detail="Invalid token")
-
-    user = db.query(models.User).filter(models.User.url_hash == url_hash).first()
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
-
-    if user.username != username:
-        raise HTTPException(status_code=403, detail="Access denied")
-
+def user_world(url_hash: str):
     return HTMLResponse(f"""
     <!DOCTYPE html>
     <html lang="en">
     <head>
-        <meta charset="UTF-8">
-        <title>{user.username}'s World</title>
-        <style>
-            body {{
-                background-color: #ffffff;
-                color: black;
-                font-family: sans-serif;
-                padding: 2em;
-            }}
-        </style>
+      <meta charset="UTF-8" />
+      <title>User World</title>
     </head>
     <body>
-        <h1>Welcome to {user.username}'s world!</h1>
-        <p>Coins: {user.coins}</p>
-        <p>Rocks: {user.rocks}</p>
+      <h1 id="title">Loading...</h1>
+      <p id="coins"></p>
+      <p id="rocks"></p>
+
+      <script>
+        const token = localStorage.getItem("token");
+        const urlHash = window.location.pathname.split("/").pop();
+
+        if (!token) {{
+          document.body.innerHTML = "<p>Not authenticated.</p>";
+        }} else {{
+          fetch(`https://pentaworlds.onrender.com/data/${{urlHash}}`, {{
+            headers: {{ Authorization: `Bearer ${{token}}` }}
+          }})
+          .then(res => res.json())
+          .then(data => {{
+            document.getElementById("title").textContent = `Welcome to ${{data.username}}'s world!`;
+            document.getElementById("coins").textContent = `Coins: ${{data.coins}}`;
+            document.getElementById("rocks").textContent = `Rocks: ${{data.rocks}}`;
+          }})
+          .catch(err => {{
+            document.body.innerHTML = "<p>Access denied or error occurred.</p>";
+          }});
+        }}
+      </script>
     </body>
     </html>
     """)
@@ -193,5 +190,20 @@ def test_auth(token: str = Depends(oauth2_scheme)):
 @app.get("/protected")
 def protected(user: models.User = Depends(get_current_user)):
     return {"message": f"Hello, {user.username}!"}
+
+@app.get("/data/{url_hash}")
+def get_user_data(url_hash: str, token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
+    payload = auth.decode_token(token)
+    username = payload.get("sub")
+
+    user = db.query(User).filter(User.url_hash == url_hash).first()
+    if not user or user.username != username:
+        raise HTTPException(status_code=403, detail="Access denied")
+
+    return {
+        "username": user.username,
+        "coins": user.coins,
+        "rocks": user.rocks
+    }
 
 print("Everything is good from main.py")
