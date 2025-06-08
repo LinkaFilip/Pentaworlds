@@ -196,7 +196,7 @@ def get_user_data(url_hash: str, token: str = Depends(oauth2_scheme), db: Sessio
     payload = auth.decode_token(token)
     username = payload.get("sub")
 
-    user = db.query(User).filter(User.url_hash == url_hash).first()
+    user = db.query(models.User).filter(models.User.url_hash == url_hash).first()
     if not user or user.username != username:
         raise HTTPException(status_code=403, detail="Access denied")
 
