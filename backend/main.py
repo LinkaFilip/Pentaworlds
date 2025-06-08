@@ -152,7 +152,6 @@ def user_world(
         rocks: int
 
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/login")
 
 class CoinsData(BaseModel):
     coins: int
@@ -182,6 +181,7 @@ def rocks(data: CoinsData, token: str = Depends(oauth2_scheme), db: Session = De
     user.coins = data.coins
     db.commit()
     return {"message": "Rocks updated", "rocks": user.rocks}
+
 @app.get("/test-auth")
 def test_auth(token: str = Depends(oauth2_scheme)):
     print("Token received in /test-auth:", token)
@@ -189,4 +189,9 @@ def test_auth(token: str = Depends(oauth2_scheme)):
     print("DB session:", db)
     user = db.query(User).filter(User.username == username).first()
     print("Queried user:", user)
+
+@app.get("/protected")
+def protected(user: models.User = Depends(get_current_user)):
+    return {"message": f"Hello, {user.username}!"}
+
 print("Everything is good from main.py")
