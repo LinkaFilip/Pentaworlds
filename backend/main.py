@@ -25,7 +25,7 @@ app.include_router(user.router)
 models.Base.metadata.create_all(bind=engine)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["https://pentaworlds.com", "https://www.pentaworlds.com"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -108,42 +108,50 @@ async def global_exception_handler(request, exc):
     )
 @app.get("/{url_hash}", response_class=HTMLResponse)
 def user_world(url_hash: str):
-    return HTMLResponse(f"""
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-      <meta charset="UTF-8" />
-      <title>User</title>
-    </head>
-    <body style="font-family: 'Helvetica', sans-serif;">
-      <h1 id="title">Loading...</h1>
-      <p id="coins"></p>
-      <p id="rocks"></p>
+return HTMLResponse("""
+<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"><title>User World</title></head>
+<body>
+  <h1 id="title">Loading...</h1>
+  <p id="coins"></p>
+  <p id="rocks"></p>
 
-      <script>
-        const token = localStorage.getItem("token");
-        const urlHash = window.location.pathname.split("/").pop();
+  <script>
+    const token = localStorage.getItem("token");
+    const urlHash = window.location.pathname.split("/").pop();
 
-        if (!token) {{
-          document.body.innerHTML = "<p>Not authenticated.</p>";
-        }} else {{
-          fetch(`https://pentaworlds.onrender.com/data/${{urlHash}}`, {{
-            headers: {{ Authorization: `Bearer ${{token}}` }}
-          }})
-          .then(res => res.json())
-          .then(data => {{
-            document.getElementById("title").textContent = `Welcome ${{data.username}}!`;
-            document.getElementById("coins").textContent = `Coins: ${{data.coins}}`;
-            document.getElementById("rocks").textContent = `Rocks: ${{data.rocks}}`;
-          }})
-          .catch(err => {{
-            document.body.innerHTML = "<p>Access denied or error occurred.</p>";
-          }});
-        }}
-      </script>
-    </body>
-    </html>
-    """)
+    if (!token) {
+      document.body.innerHTML = "<p style='color:red;'>Musíte být přihlášen.</p>";
+    } else {
+      fetch(`https://pentaworlds.onrender.com/data/${urlHash}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      })
+      .then(res => {
+        if (!res.ok) {
+          if (res.status === 403) {
+            throw new Error("Přístup zamítnut.");
+          } else if (res.status === 404) {
+            throw new Error("Svět nenalezen.");
+          } else {
+            throw new Error("Chyba serveru.");
+          }
+        }
+        return res.json();
+      })
+      .then(data => {
+        document.getElementById("title").textContent = `Welcome to ${data.username}'s world!`;
+        document.getElementById("coins").textContent = `Coins: ${data.coins}`;
+        document.getElementById("rocks").textContent = `Rocks: ${data.rocks}`;
+      })
+      .catch(err => {
+        document.body.innerHTML = `<p style='color:red;'>${err.message}</p>`;
+      });
+    }
+  </script>
+</body>
+</html>
+""")
     class CoinsData(BaseModel):
         coins: int
         rocks: int
