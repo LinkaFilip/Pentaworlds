@@ -125,7 +125,7 @@ def user_world(url_hash: str):
         const urlHash = window.location.pathname.split("/").pop();
 
         if (!token) {{
-          document.body.innerHTML = "<p>Not authenticated.</p>";
+          window.location.href = "/login.html"; // pokud ji máš
         }} else {{
           fetch(`https://pentaworlds.onrender.com/data/${{urlHash}}`, {{
             headers: {{ Authorization: `Bearer ${{token}}` }}
