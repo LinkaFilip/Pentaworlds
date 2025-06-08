@@ -32,14 +32,16 @@ def create_access_token(data: dict):
     expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
-    print("Generated token:", encoded_jwt)  # debug
+    print("Generated token:", encoded_jwt)
     return encoded_jwt
 
 def decode_token(token: str):
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        print("Decoded token payload:", payload)
         return payload
-    except JWTError:
+    except JWTError as e:
+        print("JWT decode error:", str(e))
         raise HTTPException(status_code=401, detail="Invalid token")
 
 def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
