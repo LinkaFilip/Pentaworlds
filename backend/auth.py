@@ -60,6 +60,4 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
     print("DEBUG all users in DB:", [u.username for u in db.query(User).all()])
     return user
 
-
-
 print("Everything is good from auth.py")

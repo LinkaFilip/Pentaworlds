@@ -148,8 +148,6 @@ def user_world(url_hash: str):
         coins: int
         rocks: int
 
-
-
 class CoinsData(BaseModel):
     coins: int
     rocks: int
